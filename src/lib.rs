@@ -233,7 +233,9 @@ fn filtered_data_to_request(
         proxy_address
     };
 
-    let headers = remove_hop_headers(&headers);
+    let host = proxy_uri.split("/").take(3).collect::<Vec<_>>()[2];
+    let mut headers = remove_hop_headers(&headers);
+    headers.insert("Host", HeaderValue::from_str(host).expect("Host header correct"));
 
     let client = reqwest::Client::new();
     client
